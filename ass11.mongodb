@@ -1,0 +1,232 @@
+
+Aim: Study of MAP-REDUCE in Mongodb
+Problem Statement:-Implement Map reduces operation with suitable example using MongoDB.
+Outcomes: Student should be able to
+1. Understand concept of Map Reduce
+2. Implement Map Reduce
+
+PEOs ,POs,  PSOs and COs satisfied
+PEOs  :2		POs  :	1,3,4,5	          PSOs : 1,2		COs :5
+
+Software used :MONGODB(NOSQL)
+
+
+Aim: Study of Aggregation framework and Indexing
+Problem Statement:- Design and Develop MongoDB Queries using aggregation and indexing with suitable example  using MongoDB.
+
+Outcomes: Student should be able to
+1. Understand concept Aggregation framework
+2. Concept of Indexing.
+
+PEOs ,POs,  PSOs and COs satisfied
+PEOs  :2		POs  :	1,3,5,12	PSOs : 1,2		COs :5
+
+Software used : MONGODB(NOSQL)
+
+Aim: NOSQL Databases (MONGODB)
+Problem Statement:-Design and develop MONGODB queries using CRUD operations(Use CRUD operation, Save method, Logical operators etc
+
+Outcomes: Student should be able to
+1. Understand concept of Large scale database
+2. Concept of unstructured data
+3. Able to install MONGODB
+4. Able to solve MONGODb queries using CRUD operations.
+5. Concept of logical operators and Save method
+
+PEOs ,POs,  PSOs and COs satisfied
+PEOs  :2		POs  :	1,3,,5,12	              PSOs : 1,2		COs :5
+
+Software used :MONGODB(NOSQL)
+
+Aim: Study of PL/SQL CURSOR
+Problem Statement:- Cursors: (All types: Implicit, Explicit, Cursor FOR Loop, Parameterized Cursor) Write a PL/SQL block of code using parameterized Cursor, that will merge the data available in the newly created table N_RollCall with the data available in the table O_RollCall. If the data in the first table already exist in the second table then that data should be skipped. Frame the separate problem statement for writing PL/SQL block to implement all types
+
+Outcomes: Student should be able to
+1. Understand cursor concept
+2. Write all types of cursors
+
+PEOs ,POs,  PSOs and COs satisfied
+PEOs  : 1	   	POs  :	1,2,3,4,5		PSOs : 1,2		COs :4
+
+Software used : ORACLE
+
+
+
+> show dbs
+Ashitosh  0.000GB
+admin     0.000GB
+local     0.000GB
+> use Ashitosh
+switched to db Ashitosh
+
+> db.Computer.insertMany([{Name:"SDB",Designation:"HOD",Age:40,Salary:90000},{Name:"SBN",Designation:"Asso Prof",Age:40,Salary:85000},{Name:"JSC",Designation:"Asst Prof",Age:30,Salary:75000}]):40,Salary:85000
+        "acknowledged" : true,
+        "insertedIds" : [
+                ObjectId("6530addf91f624ec229e97c8"),
+                ObjectId("6530addf91f624ec229e97c9"),
+                ObjectId("6530addf91f624ec229e97ca")
+        ]
+}
+>
+> db.Computer.createIndex({Name:1})
+{
+        "createdCollectionAutomatically" : false,
+        "numIndexesBefore" : 1,
+        "numIndexesAfter" : 2,
+        "ok" : 1
+}
+>
+>  db.Computer.createIndex({Age:1,Salary:-1})
+{
+        "createdCollectionAutomatically" : false,
+        "numIndexesBefore" : 2,
+        "numIndexesAfter" : 3,
+        "ok" : 1
+}
+>
+> db.Computer.getIndexes()
+[
+        {
+                "v" : 2,
+                "key" : {
+                        "_id" : 1
+                },
+                "name" : "_id_",
+                "ns" : "Ashitosh.Computer"
+        },
+        {
+                "v" : 2,
+                "key" : {
+                        "Name" : 1
+                },
+                "name" : "Name_1",
+                "ns" : "Ashitosh.Computer"
+        },
+        {
+                "v" : 2,
+                "key" : {
+                        "Age" : 1,
+                        "Salary" : -1
+                },
+                "name" : "Age_1_Salary_-1",
+                "ns" : "Ashitosh.Computer"
+        }
+]
+>
+> db.Computer.dropIndex({Name:1})
+{ "nIndexesWas" : 3, "ok" : 1 }
+> db.Computer.dropIndex({Name:1})
+{
+        "nIndexesWas" : 2,
+        "ok" : 0,
+        "errmsg" : "can't find index with key: { Name: 1.0 }",
+        "code" : 27,
+        "codeName" : "IndexNotFound"
+}
+>
+> db.Computer.aggregate([ { $match: { Age: { $gt: 40 } } } ])
+> db.Computer.aggregate([ { $match: { Age: { $lt: 40 } } } ])
+{ "_id" : ObjectId("6530addf91f624ec229e97ca"), "Name" : "JSC", "Designation" : "Asst Prof", "Age" : 30, "Salary" : 75000 }
+>            
+> db.Computer.aggregate([    { $group: { _id: "$Designation", avgSalary: { $avg: "$Salary" } } } ])
+{ "_id" : "Asst Prof", "avgSalary" : 75000 }
+{ "_id" : "Asso Prof", "avgSalary" : 85000 }
+{ "_id" : "HOD", "avgSalary" : 90000 }
+>
+> db.Computer.insertMany([{Name:"MSC",Designation:"Asso Prof",Age:42,Salary:75000},{Name:"VND",Designation:"Asso Prof",Age:40,Salary:80000},{Name:"VSK",Designation:"Asso Prof",Age:42,Salary:75000}])
+{
+        "acknowledged" : true,
+        "insertedIds" : [
+                ObjectId("6530aeb591f624ec229e97cb"),
+                ObjectId("6530aeb591f624ec229e97cc"),
+                ObjectId("6530aeb591f624ec229e97cd")
+        ]
+}
+> 
+> db.Computer.aggregate([    { $group: { _id: "$Designation", avgSalary: { $avg: "$Salary" } } } ])
+{ "_id" : "Asst Prof", "avgSalary" : 70000 }
+{ "_id" : "Asso Prof", "avgSalary" : 80000 }
+{ "_id" : "HOD", "avgSalary" : 90000 }
+>
+>
+> db.Computer.aggregate([ { $sort: { Salary: -1 } } ])
+{ "_id" : ObjectId("6530addf91f624ec229e97c8"), "Name" : "SDB", "Designation" : "HOD", "Age" : 40, "Salary" : 90000 }
+{ "_id" : ObjectId("6530addf91f624ec229e97c9"), "Name" : "SBN", "Designation" : "Asso Prof", "Age" : 40, "Salary" : 85000 }
+{ "_id" : ObjectId("6530aeb591f624ec229e97cc"), "Name" : "VND", "Designation" : "Asso Prof", "Age" : 40, "Salary" : 80000 }
+{ "_id" : ObjectId("6530addf91f624ec229e97ca"), "Name" : "JSC", "Designation" : "Asst Prof", "Age" : 30, "Salary" : 75000 }
+{ "_id" : ObjectId("6530aeb591f624ec229e97cb"), "Name" : "MSC", "Designation" : "Asso Prof", "Age" : 42, "Salary" : 75000 }
+{ "_id" : ObjectId("6530aeb591f624ec229e97cd"), "Name" : "VSK", "Designation" : "Asst Prof", "Age" : 35, "Salary" : 65000 }
+>
+>
+> db.Computer.aggregate([{$project: { EmployeeName: "$Name", Age: 1,Salary: 1,_id: 0 } } ])
+{ "Age" : 40, "Salary" : 90000, "EmployeeName" : "SDB" }
+{ "Age" : 40, "Salary" : 85000, "EmployeeName" : "SBN" }
+{ "Age" : 30, "Salary" : 75000, "EmployeeName" : "JSC" }
+{ "Age" : 42, "Salary" : 75000, "EmployeeName" : "MSC" }
+{ "Age" : 40, "Salary" : 80000, "EmployeeName" : "VND" }
+{ "Age" : 35, "Salary" : 65000, "EmployeeName" : "VSK" }
+>
+> db.Computer.aggregate([
+... ...   {
+... ...     $group: {
+... ...       _id: null, // Group all documents into a single group
+... ...       totalSalary: { $sum: "$Salary" }, // Calculate the sum of Salary
+... ...       avgAge: { $avg: "$Age" }, // Calculate the average of Age
+... ...       minSalary: { $min: "$Salary" }, // Find the minimum Salary
+... ...       maxSalary: { $max: "$Salary" }, // Find the maximum Salary
+... ...       firstDesignation: { $first: "$Designation" }, // Get the first Designation
+... ...       lastDesignation: { $last: "$Designation" } // Get the last Designation
+... ...     }
+... ...   }
+... ... ])
+{
+        "_id" : null, "totalSalary" : 470000,"avgAge" : 37.833333333333336,"minSalary" : 65000,"maxSalary" : 90000,
+"firstDesignation" : "HOD","lastDesignation" : "Asst Prof"
+}
+>
+> db.Computer.count()
+6
+>use Ashitosh
+switched to db Ashitosh
+> show collections
+Computer
+Student
+> db.Computer.find()
+{ "_id" : ObjectId("6530addf91f624ec229e97c8"), "Name" : "SDB", "Designation" : "HOD", "Age" : 40, "Salary" : 90000 }
+{ "_id" : ObjectId("6530addf91f624ec229e97c9"), "Name" : "SBN", "Designation" : "Asso Prof", "Age" : 40, "Salary" : 85000 }
+{ "_id" : ObjectId("6530addf91f624ec229e97ca"), "Name" : "JSC", "Designation" : "Asst Prof", "Age" : 30, "Salary" : 75000 }
+{ "_id" : ObjectId("6530aeb591f624ec229e97cb"), "Name" : "MSC", "Designation" : "Asso Prof", "Age" : 42, "Salary" : 75000 }
+{ "_id" : ObjectId("6530aeb591f624ec229e97cc"), "Name" : "VND", "Designation" : "Asso Prof", "Age" : 40, "Salary" : 80000 }
+{ "_id" : ObjectId("6530aeb591f624ec229e97cd"), "Name" : "VSK", "Designation" : "Asst Prof", "Age" : 35, "Salary" : 65000 }
+> var mapfunction=function(){
+... emit("total",this.Salary)
+... };
+>
+> var reducefunction=function(key,values){
+... return Array.sum(values)
+... };
+>
+> db.Computer.mapReduce(
+... mapfunction,
+... reducefunction,
+... {
+... out:"totalSalaryResult"
+... }
+... );
+{
+        "result" : "totalSalaryResult",
+        "timeMillis" : 23,
+        "counts" : {
+                "input" : 6,
+                "emit" : 6,
+                "reduce" : 1,
+                "output" : 1
+        },
+        "ok" : 1
+}
+>
+> db.totalSalaryResult.find()
+{ "_id" : "total", "value" : 470000 }
+
+
+

@@ -1,0 +1,155 @@
+show dbs			//show available databases
+--admin     0.000GB
+--local     0.000GB
+ use Ashitosh			//Creates database Ashitosh
+switched to db Ashitosh
+db.createCollection("Student")	//to create a table or collection
+{"ok":1}
+ db.Student.insertOne({Roll_No : 1, Name:"Ashitosh",Age:20})		//Insert a single record
+{
+ "acknowledged" : true,
+        "insertedId" : ObjectId("652779d71242ea11a3a46f20")
+}
+ db.Student.find().pretty()
+{
+        "_id" : ObjectId("652779d71242ea11a3a46f20"),
+        "Roll_no" : 1,
+        "Name" : "Ashitosh",
+        "Age" : 20
+}
+db.Student.insertMany([{Roll_No:2,Name:"Vedant",Age:20},{Roll_No: 3,Name:"Sainath",Age:20}])
+{
+        "acknowledged" : true,
+        "insertedIds" : [
+                ObjectId("65277b031242ea11a3a46f21"),
+                ObjectId("65277b031242ea11a3a46f22")	]
+        }
+ show collections
+Student
+ db.Student.find()
+{ "_id" : ObjectId("652779d71242ea11a3a46f20"), "Roll_no" : 1, "Name" : "Ashitosh", "Age" : 20 }
+{ "_id" : ObjectId("65277b031242ea11a3a46f21"), "Roll_no" : 2, "Name" : "Vedant", "Age" : 20 }
+{ "_id" : ObjectId("65277b031242ea11a3a46f22"), "Roll_no" : 3, "Name" : "Sainath", "Age" : 20 }
+
+//RDBMS Where Clause Equivalents in MongoDB
+ db.Student.find({Age:{$lt:25}})
+{ "_id" : ObjectId("652779d71242ea11a3a46f20"), "Roll_no" : 1, "Name" : "Ashitosh", "Age" : 20 }
+{ "_id" : ObjectId("65277b031242ea11a3a46f21"), "Roll_no" : 2, "Name" : "Vedant", "Age" : 20 }
+{ "_id" : ObjectId("65277b031242ea11a3a46f22"), "Roll_no" : 3, "Name" : "Sainath", "Age" : 20 }
+
+ db.Student.find({Roll_no:{$gt:2}}).pretty()
+{
+        "_id" : ObjectId("65277b031242ea11a3a46f22"),
+        "Roll_no" : 3,
+        "Name" : "Sainath",
+        "Age" : 20
+}
+
+ db.Student.find({Roll_no:{$lt:3,$gt:2}})		//not available
+ db.Student.find({Roll_no:{$lt:3,$gt:1}})
+{ "_id" : ObjectId("65277b031242ea11a3a46f21"), "Roll_no" : 2, "Name" : "Vedant", "Age" : 20 }
+
+ db.Student.find({Roll_no:{$ne:3}})
+{ "_id" : ObjectId("652779d71242ea11a3a46f20"), "Roll_no" : 1, "Name" : "Ashitosh", "Age" : 20 }
+{ "_id" : ObjectId("65277b031242ea11a3a46f21"), "Roll_no" : 2, "Name" : "Vedant", "Age" : 20 }
+
+ db.Student.find({Roll_no:{$in:[1,2]}})
+{ "_id" : ObjectId("652779d71242ea11a3a46f20"), "Roll_no" : 1, "Name" : "Ashitosh", "Age" : 20 }
+{ "_id" : ObjectId("65277b031242ea11a3a46f21"), "Roll_no" : 2, "Name" : "Vedant", "Age" : 20 }
+
+ db.Student.find({Roll_no:{$nin:[1,2]}})
+{ "_id" : ObjectId("65277b031242ea11a3a46f22"), "Roll_no" : 3, "Name" : "Sainath", "Age" : 20 }
+
+ db.Student.find({Roll_no:{$lte:3}})
+{ "_id" : ObjectId("652779d71242ea11a3a46f20"), "Roll_no" : 1, "Name" : "Ashitosh", "Age" : 20 }
+{ "_id" : ObjectId("65277b031242ea11a3a46f21"), "Roll_no" : 2, "Name" : "Vedant", "Age" : 20 }
+{ "_id" : ObjectId("65277b031242ea11a3a46f22"), "Roll_no" : 3, "Name" : "Sainath", "Age" : 20 }
+
+
+ db.Student.find({Name:/^A/})
+{ "_id" : ObjectId("652779d71242ea11a3a46f20"), "Roll_no" : 1, "Name" : "Ashitosh", "Age" : 20 }
+
+ db.Student.find({Name:/A/})
+{ "_id" : ObjectId("652779d71242ea11a3a46f20"), "Roll_no" : 1, "Name" : "Ashitosh", "Age" : 20 }
+
+ db.Student.find({Name:/a/})
+{ "_id" : ObjectId("65277b031242ea11a3a46f21"), "Roll_no" : 2, "Name" : "Vedant", "Age" : 20 }
+{ "_id" : ObjectId("65277b031242ea11a3a46f22"), "Roll_no" : 3, "Name" : "Sainath", "Age" : 20 }
+
+ db.Student.find({Name:/^S/})
+{ "_id" : ObjectId("65277b031242ea11a3a46f22"), "Roll_no" : 3, "Name" : "Sainath", "Age" : 20 }
+
+db.Student.find({Name:/h$/})
+{ "_id" : ObjectId("652779d71242ea11a3a46f20"), "Roll_no" : 1, "Name" : "Ashitosh", "Age" : 20 }
+{ "_id" : ObjectId("65277b031242ea11a3a46f22"), "Roll_no" : 3, "Name" : "Sainath", "Age" : 20 }
+
+//$regex Operator
+ db.Student.find({Name:{$regex:/^S/}})
+{ "_id" : ObjectId("65277b031242ea11a3a46f22"), "Roll_no" : 3, "Name" : "Sainath", "Age" : 20 }
+
+ db.Student.find({Name:{$regex:/t$/}})
+{ "_id" : ObjectId("65277b031242ea11a3a46f21"), "Roll_no" : 2, "Name" : "Vedant", "Age" : 20 }
+
+ db.Student.find({$and:[{Name:/h$/},{Roll_no:3}]})
+{ "_id" : ObjectId("65277b031242ea11a3a46f22"), "Roll_no" : 3, "Name" : "Sainath", "Age" : 20 }
+
+ db.Student.find({$or:[{Name:/h$/},{Roll_no:3}]})
+{ "_id" : ObjectId("652779d71242ea11a3a46f20"), "Roll_no" : 1, "Name" : "Ashitosh", "Age" : 20 }
+{ "_id" : ObjectId("65277b031242ea11a3a46f22"), "Roll_no" : 3, "Name" : "Sainath", "Age" : 20 }
+
+ db.Student.find({Name:{$not:/t$/}})
+{ "_id" : ObjectId("652779d71242ea11a3a46f20"), "Roll_no" : 1, "Name" : "Ashitosh", "Age" : 20 }
+{ "_id" : ObjectId("65277b031242ea11a3a46f22"), "Roll_no" : 3, "Name" : "Sainath", "Age" : 20 }
+
+ db.Student.find({Roll_no:{$not:{$eq:2}}})
+{ "_id" : ObjectId("652779d71242ea11a3a46f20"), "Roll_no" : 1, "Name" : "Ashitosh", "Age" : 20 }
+{ "_id" : ObjectId("65277b031242ea11a3a46f22"), "Roll_no" : 3, "Name" : "Sainath", "Age" : 20 }
+
+ db.Student.find({$nor:[{Name:/h$/},{Roll_no:3}]})
+{ "_id" : ObjectId("65277b031242ea11a3a46f21"), "Roll_no" : 2, "Name" : "Vedant", "Age" : 20 }
+
+ db.Student.save({Roll_no:1,Name:"Ashitosh Warghade"})
+WriteResult({ "nInserted" : 1 })
+ db.Student.find()
+{ "_id" : ObjectId("652779d71242ea11a3a46f20"), "Roll_no" : 1, "Name" : "Ashitosh", "Age" : 20 }
+{ "_id" : ObjectId("65277b031242ea11a3a46f21"), "Roll_no" : 2, "Name" : "Vedant", "Age" : 20 }
+{ "_id" : ObjectId("65277b031242ea11a3a46f22"), "Roll_no" : 3, "Name" : "Sainath", "Age" : 20 }
+{"_id" : ObjectId("6528c1f265f0b3d38ac09045"), "Roll_no" : 1,  "Name" : "Ashitosh Warghade" }
+
+ db.Student.save({_id:1,Roll_no:4,Name:"Avinash Warghade",Age:18})
+WriteResult({ "nMatched" : 0, "nUpserted" : 1, "nModified" : 0, "_id" : 1 })
+ db.Student.find()
+{ "_id" : ObjectId("652779d71242ea11a3a46f20"), "Roll_no" : 1, "Name" : "Ashitosh", "Age" : 20 }
+{ "_id" : ObjectId("65277b031242ea11a3a46f21"), "Roll_no" : 2, "Name" : "Vedant", "Age" : 20 }
+{ "_id" : ObjectId("65277b031242ea11a3a46f22"), "Roll_no" : 3, "Name" : "Sainath", "Age" : 20 }
+{"_id" : ObjectId("6528c1f265f0b3d38ac09045"), "Roll_no" : 1,  "Name" : "Ashitosh Warghade" }
+{ "_id" : 1, "Roll_no" : 4, "Name" : "Avinash Warghade", "Age" : 18 }
+
+ db.Student.save({_id:1,Roll_no:4,Name:"Avinash Warghade",Age:19})
+WriteResult({ "nMatched" : 1, "nUpserted" : 0, "nModified" : 1 })
+ db.Student.find({Roll_no:4}).pretty()
+{ "_id" : 1, "Roll_no" : 4, "Name" : "Avinash Warghade", "Age" : 19 }
+
+ db.Student.find().sort({Age:1})
+{ "_id" : ObjectId("6528c1f265f0b3d38ac09045"), "Roll_no" : 1, "Name" : "Ashitosh Warghade" }
+{ "_id" : 1, "Roll_no" : 4, "Name" : "Avinash Warghade", "Age" : 19 }
+{ "_id" : ObjectId("652779d71242ea11a3a46f20"), "Roll_no" : 1, "Name" : "Ashitosh", "Age" : 20 }
+{ "_id" : ObjectId("65277b031242ea11a3a46f21"), "Roll_no" : 2, "Name" : "Vedant", "Age" : 20 }
+{ "_id" : ObjectId("65277b031242ea11a3a46f22"), "Roll_no" : 3, "Name" : "Sainath", "Age" : 20 }
+
+ db.Student.find().sort({Age:-1})
+{ "_id" : ObjectId("652779d71242ea11a3a46f20"), "Roll_no" : 1, "Name" : "Ashitosh", "Age" : 20 }
+{ "_id" : ObjectId("65277b031242ea11a3a46f21"), "Roll_no" : 2, "Name" : "Vedant", "Age" : 20 }
+{ "_id" : ObjectId("65277b031242ea11a3a46f22"), "Roll_no" : 3, "Name" : "Sainath", "Age" : 20 }
+{ "_id" : 1, "Roll_no" : 4, "Name" : "Avinash Warghade", "Age" : 19 }
+{ "_id" : ObjectId("6528c1f265f0b3d38ac09045"), "Roll_no" : 1, "Name" : "Ashitosh Warghade" }
+
+ db.Student.renameCollection("Student5")
+{ "ok" : 1 }
+ db.Student.find()
+ db.Student5.find()
+{ "_id" : ObjectId("652779d71242ea11a3a46f20"), "Roll_no" : 1, "Name" : "Ashitosh", "Age" : 20 }
+{ "_id" : ObjectId("65277b031242ea11a3a46f21"), "Roll_no" : 2, "Name" : "Vedant", "Age" : 20 }
+{ "_id" : ObjectId("65277b031242ea11a3a46f22"), "Roll_no" : 3, "Name" : "Sainath", "Age" : 20 }
+{ "_id" : ObjectId("6528c1f265f0b3d38ac09045"), "Roll_no" : 1, "Name" : "Ashitosh Warghade" }
+{ "_id" : 1, "Roll_no" : 4, "Name" : "Avinash Warghade", "Age" : 19 }
